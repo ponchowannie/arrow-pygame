@@ -1,34 +1,43 @@
 # Arrow Perspective Game
 
-A 3D perspective game where you control an arrow and navigate through gates while avoiding obstacles. Objects appear to move from the center of the screen towards the player, creating a sense of depth.
+A simple Pygame-based game where you control arrows and collect gates to increase your score.
 
-## Features
-- Player-controlled arrow
-- Gates to pass through
-- Obstacles to avoid
-- 3D perspective effect
-- Progressive object scaling
+## Setup
 
-## Requirements
-- Python 3.x
-- Pygame 2.5.2
+1. Create a virtual environment:
+```bash
+python -m venv venv
+```
 
-## Installation
-1. Clone this repository
-2. Install the required dependencies:
+2. Activate the virtual environment:
+- On Windows:
+```bash
+venv\Scripts\activate
+```
+- On macOS/Linux:
+```bash
+source venv/bin/activate
+```
+
+3. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-## How to Play
-1. Run the game:
+## Running the Game
+
 ```bash
 python main.py
 ```
-2. Use the LEFT and RIGHT arrow keys to control the arrow's angle
-3. Try to pass through the green gates while avoiding the red obstacles
 
 ## Controls
-- LEFT Arrow: Rotate arrow left
-- RIGHT Arrow: Rotate arrow right
-- ESC or close window to quit
+
+- Left Arrow: Move left
+- Right Arrow: Move right
+
+## Game Rules
+
+- Collect gates to increase your score
+- Each gate has a value that affects your arrow count
+- Gates come in pairs, and you can only collect one gate from each pair
+- Try to get the highest score possible!
