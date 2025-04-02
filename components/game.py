@@ -1,7 +1,9 @@
 import pygame
+import random
 from .constants import *
 from .player import Player
 from .gate import Gate
+from .obstacle import Obstacle
 
 class Game:
     def __init__(self):
@@ -9,6 +11,7 @@ class Game:
         self.gates = []
         self.obstacles = []
         self.spawn_timer = 0
+        self.obs_timer = -SPAWN_DELAY/2
         self.spawn_delay = SPAWN_DELAY
         self.game_speed = GAME_SPEED
         self.collected_pairs = set()  # Track which gate pairs have been collected
@@ -39,6 +42,10 @@ class Game:
             self.gates.append(Gate("LEFT", pair_id))
             self.gates.append(Gate("RIGHT", pair_id))
             self.spawn_timer = current_time
+        if current_time - self.obs_timer > self.spawn_delay:
+            random_amount = random.randint(-2, 2)
+            self.obstacles.append(Obstacle(random_amount))
+            self.obs_timer = current_time
 
     def update(self):
         # Update object positions
