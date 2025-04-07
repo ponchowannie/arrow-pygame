@@ -5,6 +5,10 @@ from components.game import Game
 # Initialize Pygame
 pygame.init()
 
+# Loag the background image
+BACKGROUND_IMAGE = pygame.image.load('./components/images/background_desert.png')
+BACKGROUND_IMAGE = pygame.transform.scale(BACKGROUND_IMAGE, (WINDOW_WIDTH, WINDOW_HEIGHT))
+
 # Set up the display
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Arrow Perspective Game")
@@ -29,14 +33,17 @@ def main():
 
         # Update game state
         game.update()
-        
-        # Draw everything
+
+        # Draw the background
+        screen.blit(BACKGROUND_IMAGE)
+
+        # Draw everything else
         game.draw(screen)
-        
+
         # Cap the framerate
         clock.tick(FPS)
 
     pygame.quit()
 
 if __name__ == "__main__":
-    main() 
+    main()

@@ -43,13 +43,17 @@ class Gate:
         # Create a surface for the transparent rectangle
         gate_surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
         
+        # Choose colors based on collected status
+        fill_color = TRANSPARENT_GREY if self.collected else TRANSPARENT_BLUE
+        outline_color = NEON_GREY if self.collected else NEON_BLUE
+        
         # Draw the transparent fill
-        pygame.draw.rect(gate_surface, TRANSPARENT_BLUE, 
+        pygame.draw.rect(gate_surface, fill_color, 
                         (0, 0, self.width, self.height))
         
         # Draw the neon outline
         outline_width = 3
-        pygame.draw.rect(gate_surface, NEON_BLUE, 
+        pygame.draw.rect(gate_surface, outline_color, 
                         (0, 0, self.width, self.height), outline_width)
         
         # Draw the transparent surface

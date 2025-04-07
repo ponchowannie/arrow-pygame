@@ -1,6 +1,5 @@
 # Window settings
-WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 600
+WINDOW_WIDTH, WINDOW_HEIGHT = 375, 667
 FPS = 60
 
 # Colors
@@ -11,6 +10,8 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 NEON_BLUE = (0, 255, 255)  # Bright cyan for neon effect
 TRANSPARENT_BLUE = (0, 255, 255, 128)  # Transparent version of neon blue
+NEON_GREY = (200, 200, 200)  # Bright grey for collected gates
+TRANSPARENT_GREY = (200, 200, 200, 128)  # Transparent grey for collected gates
 
 # Game settings
 SPAWN_DELAY = 3000  # milliseconds

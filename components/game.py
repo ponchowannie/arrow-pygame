@@ -7,6 +7,7 @@ from .obstacle import Obstacle
 
 class Game:
     def __init__(self):
+        print("Initializing game...")
         self.player = Player()
         self.gates = []
         self.obstacles = []
@@ -15,6 +16,7 @@ class Game:
         self.spawn_delay = SPAWN_DELAY
         self.game_speed = GAME_SPEED
         self.collected_pairs = set()  # Track which gate pairs have been collected
+        print("Game initialized")
 
     def check_collisions(self):
         player_rect = self.player.get_rect()
@@ -42,9 +44,10 @@ class Game:
             self.gates.append(Gate("LEFT", pair_id))
             self.gates.append(Gate("RIGHT", pair_id))
             self.spawn_timer = current_time
+            print(f"Spawned new gate pair. Total gates: {len(self.gates)}")
         if current_time - self.obs_timer > self.spawn_delay:
             random_amount = random.randint(-2, 2)
-            self.obstacles.append(Obstacle(random_amount))
+            self.obstacles.append(Obstacle())
             self.obs_timer = current_time
 
     def update(self):
@@ -65,7 +68,7 @@ class Game:
         self.check_collisions()
 
     def draw(self, screen):
-        screen.fill(WHITE)  # Changed from BLACK to WHITE
+        print(f"Drawing game state - Gates: {len(self.gates)}, Player arrows: {self.player.arrow_count}")
         
         # Draw gates and obstacles
         for gate in self.gates:
@@ -73,6 +76,7 @@ class Game:
         for obstacle in self.obstacles:
             obstacle.draw(screen)
             
+
         # Draw player
         self.player.draw(screen)
         
