@@ -27,10 +27,11 @@ class Obstacle(pygame.sprite.Sprite):
         return pygame.Rect(self.x, self.y - self.height // 2, self.width, self.height)
 
     def update_position(self):
-        # Use quadratic scaling for smoother size increase
-        scale_factor = 1 + (self.distance * self.distance)
-        self.width = int(self.base_width * scale_factor)
-        self.height = int(self.base_height * scale_factor)
+        # Use power-based scaling for smoother size increase
+        power = 1.5  # Adjust this value for more realistic scaling
+        scale_factor = 1 + (self.distance ** power)
+        self.width = self.base_width * scale_factor
+        self.height = self.base_height * scale_factor
 
         # Scale the image to match the new dimensions
         self.image = pygame.transform.scale(OBSTACLE_IMAGE, (self.width, self.height))

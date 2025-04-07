@@ -25,17 +25,18 @@ class Gate:
                          self.width, self.height)
 
     def update_position(self):
-        # Use quadratic scaling for smoother size increase
-        scale_factor = 1 + (self.distance * self.distance)
+        # Use power-based scaling for smoother size increase
+        power = 1.5  # Adjust this value for more realistic scaling
+        scale_factor = 1 + (self.distance ** power)
         self.width = self.base_width * scale_factor
         self.height = self.base_height * scale_factor
-        
+
         # Update x position to keep the appropriate side touching the center line
         if self.side == "LEFT":
             self.x = self.center_x - self.width  # Right side touches center
         else:  # RIGHT
             self.x = self.center_x  # Left side touches center
-            
+
         # Scale movement speed with distance (faster as it gets closer)
         self.y += (self.base_movement_speed * (1 + self.distance)) * 2
 
@@ -63,4 +64,4 @@ class Gate:
         # Draw the value text in white for better contrast against the neon
         text = self.font.render(str(self.value), True, WHITE)
         text_rect = text.get_rect(center=(self.x + self.width//2, self.y))
-        screen.blit(text, text_rect) 
+        screen.blit(text, text_rect)
