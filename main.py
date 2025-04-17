@@ -1,6 +1,7 @@
 import pygame
 from components.constants import *
 from components.game import Game
+from components.start_screen import show_start_screen
 
 # Initialize Pygame
 pygame.init()
@@ -15,6 +16,7 @@ pygame.display.set_caption("Arrow Perspective Game")
 clock = pygame.time.Clock()
 
 def main():
+    show_start_screen(screen, BACKGROUND_IMAGE, clock)
     game = Game()
     running = True
 
