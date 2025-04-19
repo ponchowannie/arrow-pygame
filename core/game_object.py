@@ -18,13 +18,14 @@ class GameObject:
         return pygame.Rect(self.x, self.y - self.height // 2, self.width, self.height)
 
     def update_position(self, power=1.5):
+        # Scale movement speed with distance (faster as it gets closer)
+        self.y += (self.base_movement_speed * (1 + self.distance)) * 2
+
+    def update_size(self, power=1.5):
         # Use power-based scaling for smoother size increase
         scale_factor = 1 + (self.distance ** power)
         self.width = self.base_width * scale_factor
         self.height = self.base_height * scale_factor
-
-        # Scale movement speed with distance (faster as it gets closer)
-        self.y += (self.base_movement_speed * (1 + self.distance)) * 2
 
     def draw_text(self, screen, text, color, center):
         rendered_text = self.font.render(str(text), True, color)

@@ -15,5 +15,6 @@ TRANSPARENT_GREY = (200, 200, 200, 128)  # Transparent grey for collected gates
 
 # Game settings
 SPAWN_DELAY = 3000  # milliseconds
+CACTUS_SPAWN_DELAY = 2000  # milliseconds
 GAME_SPEED = 0.002  # Reduced speed for smoother movement
 MAX_ARROWS_PER_LAYER = 12 

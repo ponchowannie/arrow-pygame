@@ -7,7 +7,7 @@ from components.start_screen import show_start_screen
 pygame.init()
 
 # Loag the background image
-BACKGROUND_IMAGE = pygame.image.load('./components/images/background_desert.png')
+BACKGROUND_IMAGE = pygame.image.load('./components/images/background.png')
 BACKGROUND_IMAGE = pygame.transform.scale(BACKGROUND_IMAGE, (WINDOW_WIDTH, WINDOW_HEIGHT))
 
 # Set up the display

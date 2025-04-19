@@ -12,10 +12,11 @@ class Gate(GameObject):
         self.value = random.randint(-10, 10)  # Random value to display
         self.pair_id = pair_id  # Identifier for the gate pair
         self.collected = False  # Track if this gate has been collected
-        self.update_position()
+        self.update_object()
 
-    def update_position(self, power=1.5):
+    def update_object(self, power=1.5):
         super().update_position(power)
+        super().update_size(power)
 
         # Update x position to keep the appropriate side touching the center line
         if self.side == "LEFT":
