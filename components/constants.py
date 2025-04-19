@@ -13,8 +13,14 @@ TRANSPARENT_BLUE = (0, 255, 255, 128)  # Transparent version of neon blue
 NEON_GREY = (200, 200, 200)  # Bright grey for collected gates
 TRANSPARENT_GREY = (200, 200, 200, 128)  # Transparent grey for collected gates
 
+# Road line settings
+ROAD_LINE_COLOR = (128, 128, 128)  # Grey color
+ROAD_LINE_WIDTH = 50
+ROAD_LINE_HEIGHT = 1
+ROAD_LINE_SPAWN_DELAY = 1000  # Milliseconds
+
 # Game settings
 SPAWN_DELAY = 3000  # milliseconds
 CACTUS_SPAWN_DELAY = 2000  # milliseconds
 GAME_SPEED = 0.002  # Reduced speed for smoother movement
-MAX_ARROWS_PER_LAYER = 12 
+MAX_ARROWS_PER_LAYER = 12

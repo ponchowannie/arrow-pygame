@@ -6,8 +6,8 @@ class Player:
     def __init__(self):
         self.x = WINDOW_WIDTH // 2
         self.y = WINDOW_HEIGHT - 100
-        self.width = 40  # Arrow width
-        self.height = 80  # Arrow height
+        self.width = 20  # Arrow width
+        self.height = 60  # Arrow height
         self.speed = 8
         self.score = 0
         self.arrow_count = 1  # Number of arrows

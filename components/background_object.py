@@ -17,8 +17,8 @@ class BackgroundObject(GameObject):
         self.original_image = CACTUS1_ORIGINAL if choice == 1 else CACTUS2_ORIGINAL # Store the original image for scaling
 
         side = random.choice(["LEFT", "RIGHT"])  # Randomly decide the side
-        x = random.randint(40, 140) if side == "LEFT" else random.randint(250, 360)  # Set initial x position
-        y = 290 - self.image.get_height()  # Position the bottom of the image at y = 283
+        x = random.randint(40, 130) if side == "LEFT" else random.randint(250, 360)  # Set initial x position
+        y = 290 - self.image.get_height()  # Position the bottom of the image at y = 290
         base_movement_speed = 0.1  # Base vertical movement speed
 
         # Initialize using the superclass
