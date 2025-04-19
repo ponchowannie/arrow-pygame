@@ -9,7 +9,7 @@ class Player:
         self.width = 20  # Arrow width
         self.height = 60  # Arrow height
         self.speed = 8
-        self.score = 0
+        self.score = 1
         self.arrow_count = 1  # Number of arrows
         self.font = pygame.font.SysFont("Comic Sans MS", 36) # Font to use
         self.arrow_spacing = -20  # Space between arrows in same level
