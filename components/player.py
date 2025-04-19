@@ -2,25 +2,25 @@ import pygame
 from .constants import *
 
 class Player:
+    pygame.font.init()
     def __init__(self):
         self.x = WINDOW_WIDTH // 2
         self.y = WINDOW_HEIGHT - 100
-        self.width = 40  # Thin width for the line
-        self.height = 80  # Height for the line
-        self.angle = 90  # Angle in degrees
+        self.width = 40  # Arrow width
+        self.height = 80  # Arrow height
         self.speed = 8
         self.score = 0
-        self.arrow_count = 1  # Number of lines to display
-        self.font = pygame.font.Font(None, 36)
-        self.arrow_spacing = -20  # Space between arrows in the same layer
-        self.layer_height = -60  # Vertical space between layers
+        self.arrow_count = 1  # Number of arrows
+        self.font = pygame.font.SysFont("Comic Sans MS", 36) # Font to use
+        self.arrow_spacing = -20  # Space between arrows in same level
+        self.layer_height = -60  # Space between arrows in different level
 
         self.arrow_image = pygame.image.load("./components/images/arrow.png").convert_alpha()
         self.arrow_image = pygame.transform.scale(self.arrow_image, (self.width, self.height))
 
     def update_arrow_count(self):
-        self.arrow_count = max(1, self.score // 10 + 1)
-        arrow_count = min(self.arrow_count, 15)
+        self.arrow_count = max(1, self.score // 10 + 1) # Minimum of 1 arrow showing
+        arrow_count = min(self.arrow_count, 15) # Maximum of 15 arrow showing (pyramid)
         self.arrow_count = arrow_count
 
     def move(self, direction):
@@ -32,9 +32,9 @@ class Player:
     def draw(self, screen):
         self.update_arrow_count()
 
-        # Create a surface for the arrows with transparency
         arrow_surface = pygame.Surface((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.SRCALPHA)
         
+        # For arrow formation
         arrows_remaining = self.arrow_count
         row = 0
         rows = []
@@ -52,7 +52,7 @@ class Player:
 
         base_y = self.y
 
-        for row_index, arrows_in_row in enumerate(rows):  # No reverse — biggest row first
+        for row_index, arrows_in_row in enumerate(rows):
             y_pos = base_y + row_index * row_spacing
 
             total_row_width = self.width + (arrows_in_row - 1) * (self.width + horiz_overlap)
@@ -65,9 +65,10 @@ class Player:
 
         screen.blit(arrow_surface, (0, 0))
 
-        # Draw score
-        score_text = self.font.render(f"Score: {self.score}", True, BLACK)
-        screen.blit(score_text, (10, 10))
+        # Draw score below player
+        score_text = self.font.render(f"Arrow x{self.score}", True, BLACK)
+        text_rect = score_text.get_rect(center=(self.x, self.y + 50))
+        screen.blit(score_text, text_rect)
 
     def get_rect(self):
         self.update_arrow_count()
