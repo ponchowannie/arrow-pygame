@@ -34,6 +34,11 @@ class Game:
                     for g in self.gates:
                         if g.pair_id == gate.pair_id:
                             g.collected = True
+        for obstacle in self.obstacles[:]:
+            if player_rect.colliderect(obstacle.get_rect()):
+                self.player.score -= obstacle.damage
+                print(f"Hit obstacle! -{obstacle.damage} points. New score: {self.player.score}")
+                self.obstacles.remove(obstacle)  # Remove after hit
 
     def spawn_objects(self):
         current_time = pygame.time.get_ticks()
@@ -46,9 +51,15 @@ class Game:
             self.spawn_timer = current_time
             print(f"Spawned new gate pair. Total gates: {len(self.gates)}")
         if current_time - self.obs_timer > self.spawn_delay:
-            random_amount = random.randint(-2, 2)
-            self.obstacles.append(Obstacle())
+            enemy_count = random.randint(0, 3)  # Random number of enemies
+            for _ in range(enemy_count):
+                obstacle = Obstacle()
+                # Randomize horizontal position across screen
+                obstacle.x = random.randint(obstacle.width, WINDOW_WIDTH - obstacle.width)
+                self.obstacles.append(obstacle)
             self.obs_timer = current_time
+            if enemy_count > 0:
+                print(f"Spawned {enemy_count} obstacle(s)")
 
     def update(self):
         # Update object positions
