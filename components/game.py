@@ -30,11 +30,15 @@ class Game:
             if player_rect.colliderect(gate.get_rect()) and not gate.collected:
                 # Only process collision if the pair hasn't been collected yet
                 if gate.pair_id not in self.collected_pairs:
-                    # Update arrow count based on gate value
-                    new_count = self.player.arrow_count + gate.value
+                    # Update arrow count and score based on gate value
+                    if gate.operation == "ADD":
+                        new_count = self.player.score + gate.value
+                    elif gate.operation == "MULTIPLY":
+                        new_count = self.player.score * gate.value
+
                     if new_count > 0:  # Ensure we don't go below 1 arrow
                         self.player.arrow_count = new_count
-                    self.player.score += gate.value
+                    self.player.score = new_count  # Update score to calculated value
                     self.collected_pairs.add(gate.pair_id)
                     # Mark both gates in the pair as collected
                     for g in self.gates:
@@ -82,7 +86,7 @@ class Game:
         for gate in self.gates[:]:
             gate.distance += self.game_speed
             gate.update_object()
-            if gate.distance > 2:  # Increased to allow gates to grow larger
+            if gate.y > WINDOW_HEIGHT:  # Increased to allow gates to grow larger
                 self.gates.remove(gate)
 
         for obstacle in self.obstacles[:]:
@@ -107,22 +111,19 @@ class Game:
         self.check_collisions()
 
     def draw(self, screen):
-        # print(f"Drawing game state - Gates: {len(self.gates)}, Player arrows: {self.player.arrow_count}")
-        
-        # Draw background objects
-        for bg_object in self.background_objects:
+        # Draw background objects in reverse order
+        for bg_object in reversed(self.background_objects):
             bg_object.draw(screen)
 
-        # Draw road lines
-        for road_line in self.road_lines:
+        # Draw road lines in reverse order
+        for road_line in reversed(self.road_lines):
             road_line.draw(screen)
 
-        # Draw gates and obstacles
-        for gate in self.gates:
+        # Draw gates and obstacles in reverse order
+        for gate in reversed(self.gates):
             gate.draw(screen)
-        for obstacle in self.obstacles:
+        for obstacle in reversed(self.obstacles):
             obstacle.draw(screen)
-            
 
         # Draw player
         self.player.draw(screen)

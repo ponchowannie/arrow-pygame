@@ -4,33 +4,44 @@ from .constants import *
 from core.game_object import GameObject
 
 class Gate(GameObject):
-    __startPosition = (WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 - WINDOW_HEIGHT // 3)
+    __base_width = 40
+    __base_height = 20
+    __startPosition = (WINDOW_WIDTH // 2 + 5, 290 - __base_height // 2)  # Centered horizontally, adjusted vertically
 
     def __init__(self, side, pair_id):
-        super().__init__(base_width=80, base_height=40, start_position=Gate.__startPosition, base_movement_speed=0.3)
+        super().__init__(base_width=Gate.__base_width, base_height=Gate.__base_height, start_position=Gate.__startPosition, base_movement_speed=0.3)
         self.side = side
-        self.value = random.randint(-6, 10)  # Random value to display
+        self.operation = random.choice(["ADD", "MULTIPLY"])  # Randomly choose operation
+        if self.operation == "ADD":
+            self.value = random.randint(1, 10)  # Addition range
+        else:  # MULTIPLY
+            self.value = random.randint(2, 4)  # Multiplication range
         self.pair_id = pair_id  # Identifier for the gate pair
         self.collected = False  # Track if this gate has been collected
         self.update_object()
 
-    def update_object(self, power=1.5):
-        super().update_position(power)
-        super().update_size(power)
+    def update_object(self):
+        super().update_position(power=1.5)
+        super().update_size(power=2)
 
         # Update x position to keep the appropriate side touching the center line
         if self.side == "LEFT":
             self.x = self.center_x - self.width  # Right side touches center
         else:  # RIGHT
             self.x = self.center_x  # Left side touches center
+        self.distance += 0.01  # Increment distance for scaling
 
     def draw(self, screen):
         # Create a surface for the transparent rectangle
         gate_surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
 
-        # Choose colors based on collected status
-        fill_color = TRANSPARENT_GREY if self.collected else TRANSPARENT_BLUE
-        outline_color = NEON_GREY if self.collected else NEON_BLUE
+        # Choose colors based on operation and collected status
+        if self.operation == "ADD":
+            fill_color = TRANSPARENT_GREY if self.collected else TRANSPARENT_BLUE
+            outline_color = NEON_GREY if self.collected else NEON_BLUE
+        else:  # MULTIPLY
+            fill_color = TRANSPARENT_GREY if self.collected else TRANSPARENT_GREEN
+            outline_color = NEON_GREY if self.collected else NEON_GREEN
 
         # Draw the transparent fill
         pygame.draw.rect(gate_surface, fill_color, (0, 0, self.width, self.height))
