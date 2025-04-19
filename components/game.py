@@ -4,6 +4,8 @@ from .constants import *
 from .player import Player
 from .gate import Gate
 from .obstacle import Obstacle
+from .background_object import BackgroundObject  # Import the BackgroundObject class
+from .road_line import RoadLine  # Import the RoadLine class
 
 class Game:
     def __init__(self):
@@ -11,8 +13,12 @@ class Game:
         self.player = Player()
         self.gates = []
         self.obstacles = []
+        self.background_objects = []  # List to store background objects
+        self.road_lines = []  # List to store road line objects
         self.spawn_timer = 0
         self.obs_timer = -SPAWN_DELAY/2
+        self.bg_timer = 0  # Timer for spawning background objects
+        self.road_line_timer = 0  # Timer for spawning road lines
         self.spawn_delay = SPAWN_DELAY
         self.game_speed = GAME_SPEED
         self.collected_pairs = set()  # Track which gate pairs have been collected
@@ -60,27 +66,57 @@ class Game:
             self.obs_timer = current_time
             if enemy_count > 0:
                 print(f"Spawned {enemy_count} obstacle(s)")
+        if current_time - self.bg_timer > CACTUS_SPAWN_DELAY:  # Spawn background objects less frequently
+            bg_object = BackgroundObject()
+            self.background_objects.append(bg_object)
+            self.bg_timer = current_time
+            print(f"Spawned background object. Total: {len(self.background_objects)}")
+        if current_time - self.road_line_timer > ROAD_LINE_SPAWN_DELAY:  # Spawn road lines periodically
+            road_line = RoadLine() 
+            self.road_lines.append(road_line)
+            self.road_line_timer = current_time
+            print(f"Spawned road line. Total: {len(self.road_lines)}")
 
     def update(self):
         # Update object positions
         for gate in self.gates[:]:
             gate.distance += self.game_speed
-            gate.update_position()
+            gate.update_object()
             if gate.distance > 2:  # Increased to allow gates to grow larger
                 self.gates.remove(gate)
 
         for obstacle in self.obstacles[:]:
             obstacle.distance += self.game_speed
-            obstacle.update_position()
+            obstacle.update_object()
             if obstacle.distance > 1:
                 self.obstacles.remove(obstacle)
+
+        for bg_object in self.background_objects[:]:
+            bg_object.distance += self.game_speed  # Background objects move slower
+            bg_object.update_object()
+            if bg_object.x + bg_object.width < -20 or bg_object.x > WINDOW_WIDTH:  # Remove if completely out of the screen (left or right)
+                self.background_objects.remove(bg_object)
+
+        for road_line in self.road_lines[:]:
+            road_line.distance += self.game_speed  # Move road lines
+            road_line.update_object()
+            if road_line.y > WINDOW_HEIGHT:  # Remove if completely out of the screen
+                self.road_lines.remove(road_line)
 
         self.spawn_objects()
         self.check_collisions()
 
     def draw(self, screen):
-        print(f"Drawing game state - Gates: {len(self.gates)}, Player arrows: {self.player.arrow_count}")
+        # print(f"Drawing game state - Gates: {len(self.gates)}, Player arrows: {self.player.arrow_count}")
         
+        # Draw background objects
+        for bg_object in self.background_objects:
+            bg_object.draw(screen)
+
+        # Draw road lines
+        for road_line in self.road_lines:
+            road_line.draw(screen)
+
         # Draw gates and obstacles
         for gate in self.gates:
             gate.draw(screen)
@@ -91,4 +127,4 @@ class Game:
         # Draw player
         self.player.draw(screen)
         
-        pygame.display.flip() 
+        pygame.display.flip()

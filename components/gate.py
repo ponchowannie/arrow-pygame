@@ -9,13 +9,14 @@ class Gate(GameObject):
     def __init__(self, side, pair_id):
         super().__init__(base_width=80, base_height=40, start_position=Gate.__startPosition, base_movement_speed=0.3)
         self.side = side
-        self.value = random.randint(-10, 10)  # Random value to display
+        self.value = random.randint(-6, 10)  # Random value to display
         self.pair_id = pair_id  # Identifier for the gate pair
         self.collected = False  # Track if this gate has been collected
-        self.update_position()
+        self.update_object()
 
-    def update_position(self, power=1.5):
+    def update_object(self, power=1.5):
         super().update_position(power)
+        super().update_size(power)
 
         # Update x position to keep the appropriate side touching the center line
         if self.side == "LEFT":

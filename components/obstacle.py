@@ -21,10 +21,11 @@ class Obstacle(GameObject):
         
         self.x_offset = random.randint(-100, 100) # Random x
 
-        self.update_position()
+        self.update_object()
 
-    def update_position(self, power=1.5):
+    def update_object(self, power=1.5):
         super().update_position(power)
+        super().update_size(power)
 
         spread_multiplier = 2.5
         self.x = WINDOW_WIDTH // 2 + int(self.x_offset * self.distance * spread_multiplier)
