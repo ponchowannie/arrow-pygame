@@ -1,10 +1,22 @@
 import pygame
 from components.constants import WINDOW_WIDTH, WINDOW_HEIGHT, FPS
 from core.button import Button  # Import Button from core/button.py
+from components.constants import BROWN, LIGHT_BROWN
 
 class RestartButton(Button):
     def __init__(self, callback):
-        super().__init__("Main Menu", WINDOW_WIDTH // 2 - 100, WINDOW_HEIGHT // 2, 200, 50, callback)
+        super().__init__(
+            "Main Menu", 
+            WINDOW_WIDTH // 2 - 100, 
+            WINDOW_HEIGHT // 2, 
+            200, 
+            50, 
+            callback,
+            color=BROWN,
+            hover_color=LIGHT_BROWN,
+            font=pygame.font.Font("./components/fonts/western.ttf", 48),
+            isHat=True,
+            )
 
 def apply_transparent_mask(screen):
     # Apply a transparent grey mask over the entire screen

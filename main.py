@@ -17,11 +17,14 @@ pygame.display.set_caption("Arrow Perspective Game")
 clock = pygame.time.Clock()
 
 def main():
+    pygame.mixer.music.load("./components/sounds/bgm.mp3")
+    pygame.mixer.music.set_volume(0.2)
+    
     while True:  # Loop to allow restarting the game
         show_start_screen(screen, BACKGROUND_IMAGE, clock)
         game = Game()
         running = True
-
+        pygame.mixer.music.play(-1)
         while running:
             # Event handling
             for event in pygame.event.get():
@@ -49,10 +52,11 @@ def main():
             if game.boss_beaten:
                 apply_transparent_mask(screen)
                 show_restart_button(screen, clock)
+                pygame.mixer.music.stop()
                 break  # Exit the running loop to restart the game
 
             # Cap the framerate
             clock.tick(FPS)
-
+            
 if __name__ == "__main__":
     main()

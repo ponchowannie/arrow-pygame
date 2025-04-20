@@ -14,6 +14,8 @@ NEON_GREY = (200, 200, 200)  # Bright grey for collected gates
 TRANSPARENT_GREY = (200, 200, 200, 128)  # Transparent grey for collected gates
 TRANSPARENT_GREEN = (0, 255, 0, 128)  # Semi-transparent green
 NEON_GREEN = (57, 255, 20)  # Bright neon green
+BROWN = (165, 42, 42)
+LIGHT_BROWN = (196, 164, 132)
 
 # Road line settings
 ROAD_LINE_COLOR = (128, 128, 128)  # Grey color
