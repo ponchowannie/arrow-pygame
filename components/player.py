@@ -32,6 +32,8 @@ class Player:
             self.x = max(self.width, self.x - self.speed)
         elif direction == 'right':
             self.x = min(WINDOW_WIDTH - self.width, self.x + self.speed)
+        elif direction == 'up':
+            self.y = max(self.height, self.y - self.speed)
 
     def draw(self, screen):
         self.update_arrow_count()
