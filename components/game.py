@@ -6,6 +6,7 @@ from .gate import Gate
 from .obstacle import Obstacle
 from .background_object import BackgroundObject  # Import the BackgroundObject class
 from .road_line import RoadLine  # Import the RoadLine class
+from .boss import Boss  # Import the Boss class
 
 class Game:
     def __init__(self):
@@ -24,6 +25,10 @@ class Game:
         self.collected_pairs = set()  # Track which gate pairs have been collected
         self.enemy_die = pygame.mixer.Sound("./components/sounds/enemy-die.mp3")
         self.gate_passed_sound = pygame.mixer.Sound("./components/sounds/gate-passed-sound.mp3")
+        self.boss = None  # Initialize boss as None
+        self.boss_active = False  # Flag to indicate if the boss is active
+        self.gate_pair_count = 0  # Counter for the number of gate pairs spawned
+        self.boss_beaten = False  # Track if the boss has been beaten
         print("Game initialized")
 
     def check_collisions(self):
@@ -54,6 +59,18 @@ class Game:
                 print(f"Hit obstacle! -{obstacle.damage} points. New score: {self.player.score}")
                 self.obstacles.remove(obstacle)  # Remove after hit
 
+        if self.boss and self.boss_active:  # Check collisions with the boss
+            if player_rect.colliderect(self.boss.get_rect()):
+                if self.player.score >= self.boss.health:
+                    print("Player wins!")
+                    self.boss.health = 0  # Update boss health to 0
+                    self.boss_beaten = True  # Mark the boss as beaten
+                elif self.player.score < self.boss.health:
+                    print("Player loses!")
+                    self.boss.health -= self.player.score  # Reduce boss health by player's score
+                    self.player.score = 0  # Set player score to 0
+                    self.boss_beaten = True  # Mark the boss as beaten
+
     def spawn_objects(self):
         current_time = pygame.time.get_ticks()
         if current_time - self.spawn_timer > self.spawn_delay:
@@ -63,7 +80,16 @@ class Game:
             self.gates.append(Gate("LEFT", pair_id))
             self.gates.append(Gate("RIGHT", pair_id))
             self.spawn_timer = current_time
-            print(f"Spawned new gate pair. Total gates: {len(self.gates)}")
+            self.gate_pair_count += 1  # Increment the gate pair counter
+            print(f"Spawned new gate pair. Total pairs spawned: {self.gate_pair_count}")
+
+        # Check if 5 pairs of gates have been spawned and the boss is not active
+        if not self.boss_active and self.gate_pair_count >= 5:
+            self.player.move("up")  # Move the player up
+            self.boss = Boss()  # Create a new boss instance
+            self.boss_active = True
+            print("Boss has appeared!")
+
         if current_time - self.obs_timer > self.spawn_delay:
             enemy_count = random.randint(0, 3)  # Random number of enemies
             positions = [0, 1, 2, 3]
@@ -77,12 +103,12 @@ class Game:
             bg_object = BackgroundObject()
             self.background_objects.append(bg_object)
             self.bg_timer = current_time
-            print(f"Spawned background object. Total: {len(self.background_objects)}")
+            # print(f"Spawned background object. Total: {len(self.background_objects)}")
         if current_time - self.road_line_timer > ROAD_LINE_SPAWN_DELAY:  # Spawn road lines periodically
             road_line = RoadLine() 
             self.road_lines.append(road_line)
             self.road_line_timer = current_time
-            print(f"Spawned road line. Total: {len(self.road_lines)}")
+            # print(f"Spawned road line. Total: {len(self.road_lines)}")
 
     def update(self):
         # Update object positions
@@ -110,6 +136,14 @@ class Game:
             if road_line.y > WINDOW_HEIGHT:  # Remove if completely out of the screen
                 self.road_lines.remove(road_line)
 
+        if self.boss and self.boss_active:  # Update the boss if active
+            self.player.move("up")  # Ensure player moves up when boss is active
+            self.boss.update_object()
+            if self.boss.health <= 0:  # Check if the boss is defeated
+                print("Boss defeated!")
+                self.boss_active = False
+                self.boss = None
+
         self.spawn_objects()
         self.check_collisions()
 
@@ -127,6 +161,12 @@ class Game:
             gate.draw(screen)
         for obstacle in reversed(self.obstacles):
             obstacle.draw(screen)
+
+        # Draw the boss if active
+        if self.boss and self.boss_active:  
+            self.boss.draw(screen)
+        elif not self.boss and not self.boss_active and self.boss_beaten:
+            self.boss.draw(screen)
 
         # Draw player
         self.player.draw(screen)

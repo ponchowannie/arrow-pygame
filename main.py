@@ -1,7 +1,8 @@
 import pygame
 from components.constants import *
 from components.game import Game
-from components.start_screen import show_start_screen
+from components.buttons.start_screen import show_start_screen
+from components.buttons.main_menu import apply_transparent_mask, show_restart_button
 
 # Initialize Pygame
 pygame.init()
@@ -18,39 +19,45 @@ clock = pygame.time.Clock()
 def main():
     hat_image = pygame.image.load("./components/images/cowboy_hat.png")
     hat_image = pygame.transform.scale(hat_image, (70, 70))
-    show_start_screen(screen, BACKGROUND_IMAGE, clock, hat_image)
     pygame.mixer.music.load("./components/sounds/bgm.mp3")
     pygame.mixer.music.set_volume(0.2)
-    pygame.mixer.music.play(-1)
-    game = Game()
-    running = True
+    
+    while True:  # Loop to allow restarting the game
+        show_start_screen(screen, BACKGROUND_IMAGE, clock, hat_image)
+        game = Game()
+        running = True
+        pygame.mixer.music.play(-1)
+        while running:
+            # Event handling
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return
 
-    while running:
-        # Event handling
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
+            # Handle continuous key presses
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_LEFT]:
+                game.player.move('left')
+            if keys[pygame.K_RIGHT]:
+                game.player.move('right')
+                
+            # Update game state
+            game.update()
 
-        # Handle continuous key presses
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-            game.player.move('left')
-        if keys[pygame.K_RIGHT]:
-            game.player.move('right')
+            # Draw the background
+            screen.blit(BACKGROUND_IMAGE)
 
-        # Update game state
-        game.update()
+            # Draw everything else
+            game.draw(screen)
 
-        # Draw the background
-        screen.blit(BACKGROUND_IMAGE)
+            # Check if the boss has been beaten
+            if game.boss_beaten:
+                apply_transparent_mask(screen)
+                show_restart_button(screen, clock)
+                break  # Exit the running loop to restart the game
 
-        # Draw everything else
-        game.draw(screen)
-
-        # Cap the framerate
-        clock.tick(FPS)
+            # Cap the framerate
+            clock.tick(FPS)
     pygame.mixer.music.stop()
-    pygame.quit()
-
 if __name__ == "__main__":
     main()
