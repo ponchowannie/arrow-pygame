@@ -35,9 +35,7 @@ def main():
                 game.player.move('left')
             if keys[pygame.K_RIGHT]:
                 game.player.move('right')
-            if keys[pygame.K_UP]:
-                game.player.move('up')
-
+                
             # Update game state
             game.update()
 
