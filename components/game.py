@@ -22,12 +22,15 @@ class Game:
         self.spawn_delay = SPAWN_DELAY
         self.game_speed = GAME_SPEED
         self.collected_pairs = set()  # Track which gate pairs have been collected
+        self.enemy_die = pygame.mixer.Sound("./components/sounds/enemy-die.mp3")
+        self.gate_passed_sound = pygame.mixer.Sound("./components/sounds/gate-passed-sound.mp3")
         print("Game initialized")
 
     def check_collisions(self):
         player_rect = self.player.get_rect()
         for gate in self.gates:
             if player_rect.colliderect(gate.get_rect()) and not gate.collected:
+                self.gate_passed_sound.play()
                 # Only process collision if the pair hasn't been collected yet
                 if gate.pair_id not in self.collected_pairs:
                     # Update arrow count and score based on gate value
@@ -47,6 +50,7 @@ class Game:
         for obstacle in self.obstacles[:]:
             if player_rect.colliderect(obstacle.get_rect()):
                 self.player.score -= obstacle.damage
+                self.enemy_die.play()
                 print(f"Hit obstacle! -{obstacle.damage} points. New score: {self.player.score}")
                 self.obstacles.remove(obstacle)  # Remove after hit
 
@@ -62,11 +66,10 @@ class Game:
             print(f"Spawned new gate pair. Total gates: {len(self.gates)}")
         if current_time - self.obs_timer > self.spawn_delay:
             enemy_count = random.randint(0, 3)  # Random number of enemies
-            for _ in range(enemy_count):
-                obstacle = Obstacle()
-                # Randomize horizontal position across screen
-                obstacle.x = random.randint(obstacle.width, WINDOW_WIDTH - obstacle.width)
-                self.obstacles.append(obstacle)
+            positions = [0, 1, 2, 3]
+            enemy_positions = random.sample(positions, enemy_count)
+            for enemy_no in range(enemy_count):
+                self.obstacles.append(Obstacle(enemy_positions[enemy_no]))
             self.obs_timer = current_time
             if enemy_count > 0:
                 print(f"Spawned {enemy_count} obstacle(s)")
@@ -92,7 +95,7 @@ class Game:
         for obstacle in self.obstacles[:]:
             obstacle.distance += self.game_speed
             obstacle.update_object()
-            if obstacle.distance > 1:
+            if obstacle.y > WINDOW_HEIGHT:
                 self.obstacles.remove(obstacle)
 
         for bg_object in self.background_objects[:]:

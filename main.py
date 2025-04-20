@@ -16,7 +16,12 @@ pygame.display.set_caption("Arrow Perspective Game")
 clock = pygame.time.Clock()
 
 def main():
-    show_start_screen(screen, BACKGROUND_IMAGE, clock)
+    hat_image = pygame.image.load("./components/images/cowboy_hat.png")
+    hat_image = pygame.transform.scale(hat_image, (70, 70))
+    show_start_screen(screen, BACKGROUND_IMAGE, clock, hat_image)
+    pygame.mixer.music.load("./components/sounds/bgm.mp3")
+    pygame.mixer.music.set_volume(0.2)
+    pygame.mixer.music.play(-1)
     game = Game()
     running = True
 
@@ -44,7 +49,7 @@ def main():
 
         # Cap the framerate
         clock.tick(FPS)
-
+    pygame.mixer.music.stop()
     pygame.quit()
 
 if __name__ == "__main__":
