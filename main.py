@@ -17,13 +17,11 @@ pygame.display.set_caption("Arrow Perspective Game")
 clock = pygame.time.Clock()
 
 def main():
-    hat_image = pygame.image.load("./components/images/cowboy_hat.png")
-    hat_image = pygame.transform.scale(hat_image, (70, 70))
     pygame.mixer.music.load("./components/sounds/bgm.mp3")
     pygame.mixer.music.set_volume(0.2)
     
     while True:  # Loop to allow restarting the game
-        show_start_screen(screen, BACKGROUND_IMAGE, clock, hat_image)
+        show_start_screen(screen, BACKGROUND_IMAGE, clock)
         game = Game()
         running = True
         pygame.mixer.music.play(-1)
@@ -54,10 +52,11 @@ def main():
             if game.boss_beaten:
                 apply_transparent_mask(screen)
                 show_restart_button(screen, clock)
+                pygame.mixer.music.stop()
                 break  # Exit the running loop to restart the game
 
             # Cap the framerate
             clock.tick(FPS)
-    pygame.mixer.music.stop()
+            
 if __name__ == "__main__":
     main()

@@ -85,7 +85,6 @@ class Game:
 
         # Check if 5 pairs of gates have been spawned and the boss is not active
         if not self.boss_active and self.gate_pair_count >= 5:
-            self.player.move("up")  # Move the player up
             self.boss = Boss()  # Create a new boss instance
             self.boss_active = True
             print("Boss has appeared!")
@@ -137,7 +136,7 @@ class Game:
                 self.road_lines.remove(road_line)
 
         if self.boss and self.boss_active:  # Update the boss if active
-            self.player.move("up")  # Ensure player moves up when boss is active
+            self.player.move("up") 
             self.boss.update_object()
             if self.boss.health <= 0:  # Check if the boss is defeated
                 print("Boss defeated!")
