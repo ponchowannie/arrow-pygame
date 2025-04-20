@@ -1,8 +1,8 @@
 import pygame
 from components.constants import *
 from components.game import Game
-from components.start_screen import show_start_screen
-from components.buttons import apply_transparent_mask, RestartButton
+from components.buttons.start_screen import show_start_screen
+from components.buttons.main_menu import apply_transparent_mask, show_restart_button
 
 # Initialize Pygame
 pygame.init()
@@ -15,22 +15,6 @@ BACKGROUND_IMAGE = pygame.transform.scale(BACKGROUND_IMAGE, (WINDOW_WIDTH, WINDO
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Arrow Perspective Game")
 clock = pygame.time.Clock()
-
-def show_restart_button(screen, clock):
-    restart_button = RestartButton(lambda: None)
-    while True:
-        restart_button.draw(screen)
-        pygame.display.flip()
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                exit()
-            restart_button.check_click(event)
-            if event.type == pygame.MOUSEBUTTONDOWN and restart_button._rect.collidepoint(event.pos):
-                return
-
-        clock.tick(FPS)
 
 def main():
     while True:  # Loop to allow restarting the game

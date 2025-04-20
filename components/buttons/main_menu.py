@@ -32,4 +32,3 @@ def show_restart_button(screen, clock):
                 pygame.quit()
                 exit()
             restart_button.check_click(event)
-
