@@ -115,7 +115,7 @@ class Game:
             print(f"Spawned new gate pair. Total pairs spawned: {self.gate_pair_count}")
 
         # Check if 5 pairs of gates have been spawned and the boss is not active
-        if not self.boss_active and not self.boss_beaten and self.gate_pair_count >= 5:
+        if not self.boss_active and not self.boss_beaten and self.gate_pair_count >= MIN_GATE_FOR_BOSS:
             self.boss = Boss()  # Create a new boss instance
             self.boss_active = True
             print("Boss has appeared!")
@@ -183,6 +183,20 @@ class Game:
 
         if self.boss and self.boss_active:  # Update the boss if active
             self.boss.update_object()
+
+            # Spawn fireballs periodically
+            current_time = pygame.time.get_ticks()
+            if current_time - self.boss.fireball_timer > 1000:  # Spawn every 1 second
+                self.boss.spawn_fireball()
+                self.boss.fireball_timer = current_time
+
+            # Check collisions with fireballs
+            for fireball in self.boss.fireballs[:]:
+                if self.player.get_rect().colliderect(fireball.rect):
+                    self.player.score -= FIREBALL_DAMAGE  # Deduct 1 point from the player's score
+                    print(f"Hit by fireball! New score: {self.player.score}")
+                    self.boss.fireballs.remove(fireball)  # Remove fireball after collision
+
             if self.boss.health <= 0:  # Check if the boss is defeated
                 print("Boss defeated!")
                 self.boss_beaten = True  # Mark the boss as beaten

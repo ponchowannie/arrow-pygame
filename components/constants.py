@@ -29,3 +29,7 @@ OBSTACLE_SPAWN_DELAY = 3500  # milliseconds
 CACTUS_SPAWN_DELAY = 800  # milliseconds
 GAME_SPEED = 0.002  # Reduced speed for smoother movement
 MAX_ARROWS_PER_LAYER = 12
+MIN_GATE_FOR_BOSS = 2
+
+# Fireball
+FIREBALL_DAMAGE = 10
