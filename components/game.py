@@ -36,6 +36,7 @@ class Game:
         for gate in self.gates:
             if player_rect.colliderect(gate.get_rect()) and not gate.collected:
                 self.gate_passed_sound.play()
+                self.gates.remove(gate)
                 # Only process collision if the pair hasn't been collected yet
                 if gate.pair_id not in self.collected_pairs:
                     # Update arrow count and score based on gate value
