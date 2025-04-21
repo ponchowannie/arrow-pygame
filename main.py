@@ -3,6 +3,7 @@ from components.constants import *
 from components.game import Game
 from components.buttons.start_screen import show_start_screen
 from components.buttons.main_menu import apply_transparent_mask, show_restart_button
+from components.screens.result_screen import ResultScreen
 
 # Initialize Pygame
 pygame.init()
@@ -26,6 +27,8 @@ def main():
         running = True
         pygame.mixer.music.play(-1)
         while running:
+            current_time = pygame.time.get_ticks()
+
             # Event handling
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -38,6 +41,10 @@ def main():
                 game.player.move('left')
             if keys[pygame.K_RIGHT]:
                 game.player.move('right')
+            if keys[pygame.K_s]:
+                if not hasattr(game, 'last_arrow_time') or current_time - game.last_arrow_time >= 200:
+                    game.spawn_arrow(direction='up')  # Spawn arrows moving in -y direction
+                    game.last_arrow_time = current_time
                 
             # Update game state
             game.update()
@@ -48,9 +55,20 @@ def main():
             # Draw everything else
             game.draw(screen)
 
+            # Check if the player's health is 0 or less
+            if game.player.score <= 0:
+                apply_transparent_mask(screen)
+                result_screen = ResultScreen("You Lost!")
+                result_screen.display(screen)
+                show_restart_button(screen, clock)
+                pygame.mixer.music.stop()
+                break  # Exit the running loop to restart the game
+
             # Check if the boss has been beaten
             if game.boss_beaten:
                 apply_transparent_mask(screen)
+                result_screen = ResultScreen("You Win!")
+                result_screen.display(screen)
                 show_restart_button(screen, clock)
                 pygame.mixer.music.stop()
                 break  # Exit the running loop to restart the game
