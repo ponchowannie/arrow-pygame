@@ -32,7 +32,38 @@ def show_start_screen(screen, background, clock):  # Add hat_image parameter
         start_button.draw(screen)
         pygame.display.flip()
         clock.tick(FPS)
+    
+    easy_button = Button("Easy", WINDOW_WIDTH // 2 - 100, WINDOW_HEIGHT // 2 - 100, 200, 60, lambda: None, 
+        color=BROWN, hover_color=LIGHT_BROWN, font=pygame.font.Font("./components/fonts/western.ttf", 48))
+    med_button = Button("Medium", WINDOW_WIDTH // 2 - 100, WINDOW_HEIGHT // 2 - 30, 200, 60, lambda: None, 
+        color=BROWN, hover_color=LIGHT_BROWN, font=pygame.font.Font("./components/fonts/western.ttf", 48))
+    hard_button = Button("Hard", WINDOW_WIDTH // 2 - 100, WINDOW_HEIGHT // 2 + 40, 200, 60, lambda: None, 
+        color=BROWN, hover_color=LIGHT_BROWN, font=pygame.font.Font("./components/fonts/western.ttf", 48))
+    diff_screen_active = True
+    diff = 0
+    while diff_screen_active:
+        screen.blit(background, (0, 0))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if easy_button._rect.collidepoint(event.pos):
+                    diff_screen_active = False
+                    diff = 0
+                if med_button._rect.collidepoint(event.pos):
+                    diff_screen_active = False
+                    diff = 1
+                if hard_button._rect.collidepoint(event.pos):
+                    diff_screen_active = False
+                    diff = 2
 
+        easy_button.draw(screen)
+        med_button.draw(screen)
+        hard_button.draw(screen)
+        pygame.display.flip()
+        clock.tick(FPS)
+    return diff
 
 '''
 import pygame

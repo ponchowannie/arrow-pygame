@@ -8,9 +8,9 @@ class RestartButton(Button):
         super().__init__(
             "Main Menu", 
             WINDOW_WIDTH // 2 - 100, 
-            WINDOW_HEIGHT // 2, 
+            WINDOW_HEIGHT // 2 - 20, 
             200, 
-            50, 
+            80, 
             callback,
             color=BROWN,
             hover_color=LIGHT_BROWN,

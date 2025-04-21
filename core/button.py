@@ -23,7 +23,7 @@ class Button:
         surface.blit(text_surface, text_rect)
         if self.hat_image:
             hat_rect = self.hat_image.get_rect()
-            hat_rect.midbottom = (text_rect.left - 10, text_rect.top + 20)
+            hat_rect.midbottom = (text_rect.left, text_rect.top + 18)
             surface.blit(self.hat_image, hat_rect)
 
     def check_click(self, event):

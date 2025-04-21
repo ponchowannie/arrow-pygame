@@ -22,8 +22,8 @@ def main():
     pygame.mixer.music.set_volume(0.2)
     
     while True:  # Loop to allow restarting the game
-        show_start_screen(screen, BACKGROUND_IMAGE, clock)
-        game = Game()
+        diff = show_start_screen(screen, BACKGROUND_IMAGE, clock)
+        game = Game(diff)
         running = True
         pygame.mixer.music.play(-1)
         while running:
