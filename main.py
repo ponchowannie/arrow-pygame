@@ -1,7 +1,7 @@
 import pygame
 from components.constants import *
 from components.game import Game
-from components.buttons.start_screen import show_start_screen
+from components.buttons.start_screen import StartScreen 
 from components.buttons.main_menu import apply_transparent_mask, show_restart_button
 from components.screens.result_screen import ResultScreen
 
@@ -22,7 +22,8 @@ def main():
     pygame.mixer.music.set_volume(0.2)
     
     while True:  # Loop to allow restarting the game
-        diff = show_start_screen(screen, BACKGROUND_IMAGE, clock)
+        start_screen = StartScreen(screen, BACKGROUND_IMAGE, clock)  # Instantiate StartScreen
+        diff = start_screen.run()  # Call the run method
         game = Game(diff)
         running = True
         pygame.mixer.music.play(-1)

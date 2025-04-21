@@ -79,6 +79,14 @@ class Game:
                     self.player.score = 0  # Set player score to 0
                     self.boss_beaten = True  # Mark the boss as beaten
 
+            # Check collisions with fireballs
+            for fireball in self.boss.fireballs[:]:
+                if player_rect.colliderect(fireball.rect):
+                    self.player.score //= FIREBALL_DAMAGE * (self.diff + 1)  # Divide points based on difficulty
+                    self.fireball_hit_sound.play()
+                    print(f"Hit by fireball! New score: {self.player.score}")
+                    self.boss.fireballs.remove(fireball)  # Remove fireball after collision
+
     def spawn_arrow(self, direction='up'):
         """Spawn multiple arrows based on the player's arrow count."""
         if self.player.score - self.player.arrow_count < 1:
@@ -194,22 +202,14 @@ class Game:
                 self.boss.spawn_fireball()
                 self.boss.fireball_timer = current_time
 
-            # Check collisions with fireballs
-            for fireball in self.boss.fireballs[:]:
-                if self.player.get_rect().colliderect(fireball.rect):
-                    self.player.score -= FIREBALL_DAMAGE * (self.diff + 1)  # Deduct 10, 20, 30 point from the player's score
-                    self.fireball_hit_sound.play()
-                    print(f"Hit by fireball! New score: {self.player.score}")
-                    self.boss.fireballs.remove(fireball)  # Remove fireball after collision
-
             if self.boss.health <= 0:  # Check if the boss is defeated
                 print("Boss defeated!")
                 self.boss_beaten = True  # Mark the boss as beaten
                 self.boss_active = False
                 self.boss = None
-
+    
         self.spawn_objects()
-        self.check_collisions()
+        self.check_collisions()  # Fireball collision checks are now handled here
 
     def draw(self, screen):
         # Draw background objects in reverse order

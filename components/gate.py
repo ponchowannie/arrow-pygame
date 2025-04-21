@@ -11,7 +11,7 @@ class Gate(GameObject):
     def __init__(self, side, pair_id):
         super().__init__(base_width=Gate.__base_width, base_height=Gate.__base_height, start_position=Gate.__startPosition, base_movement_speed=0.3)
         self.side = side
-        self.operation = random.choice(["ADD", "MULTIPLY"])  # Randomly choose operation
+        self.operation = random.choices(["ADD", "MULTIPLY"], weights=[0.7, 0.3], k=1)[0]  # Weighted random choice
         if self.operation == "ADD":
             self.value = random.randint(1, 10)  # Addition range
         else:  # MULTIPLY
