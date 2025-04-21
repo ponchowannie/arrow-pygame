@@ -7,7 +7,7 @@ from .boss_fireball import BossFireball
 boss_image = pygame.image.load("./components/images/boss.png")
 
 class Boss(GameObject):
-    def __init__(self):
+    def __init__(self, diff):
         # Initialize the base GameObject with appropriate values
         base_width = boss_image.get_width() * 0.15
         base_height = boss_image.get_height() * 0.15
@@ -19,9 +19,11 @@ class Boss(GameObject):
         self.image = pygame.transform.scale_by(boss_image, 0.15)
         self.rect = self.get_rect()
         
+        self.diff = diff
+
         # Additional Boss-specific attributes
-        self.health = 100  # Boss health
-        self.speed = base_movement_speed  # Horizontal movement speed
+        self.health = 100 * (self.diff + 1)  # Boss health
+        self.speed = base_movement_speed * (self.diff * 0.5 + 1)  # Horizontal movement speed
 
         self.fireballs = []  # List to store fireballs
         self.fireball_timer = 0  # Timer to control fireball spawning
@@ -60,7 +62,13 @@ class Boss(GameObject):
         # Update rect position based on x and y
         self.rect = self.get_rect()
         screen.blit(self.image, (self.x, self.y))
+
+        remaining_health = self.health
+
+        for i in range((self.health - 1)//100 + 1):
         # Always draw the updated health bar
-        pygame.draw.rect(screen, (0, 255, 0), (self.x, self.y - 10, self.width * (self.health / 100), 5))
-        pygame.draw.rect(screen, (255, 0, 0), (self.x + self.width * (self.health / 100), self.y - 10, self.width * (1 - self.health / 100), 5))
+            current_row_health = max(min(remaining_health, 100),0)
+            pygame.draw.rect(screen, (0, 255, 0), (self.x, self.y - 10 - (i * 7), self.width * (current_row_health / 100), 5))
+            pygame.draw.rect(screen, (255, 0, 0), (self.x + self.width * (current_row_health / 100), self.y - 10 - (i * 7), self.width * (1 - current_row_health / 100), 5))
+            remaining_health -= current_row_health
         self.draw_fireballs(screen)

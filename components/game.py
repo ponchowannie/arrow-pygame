@@ -9,7 +9,7 @@ from .road_line import RoadLine  # Import the RoadLine class
 from .boss import Boss  # Import the Boss class
 
 class Game:
-    def __init__(self):
+    def __init__(self, diff):
         print("Initializing game...")
         self.player = Player()
         self.gates = []
@@ -25,6 +25,8 @@ class Game:
         self.collected_pairs = set()  # Track which gate pairs have been collected
         self.enemy_die = pygame.mixer.Sound("./components/sounds/enemy-die.mp3")
         self.gate_passed_sound = pygame.mixer.Sound("./components/sounds/gate-passed-sound.mp3")
+        self.fireball_hit_sound = pygame.mixer.Sound("./components/sounds/fireball-hit-sound.mp3")
+        self.arrow_impact = pygame.mixer.Sound("./components/sounds/arrow-impact.mp3")
         self.boss = None  # Initialize boss as None
         self.boss_active = False  # Flag to indicate if the boss is active
         self.gate_pair_count = 0  # Counter for the number of gate pairs spawned
@@ -33,6 +35,7 @@ class Game:
         self.arrow_image = pygame.image.load('./components/images/arrow.png')  # Load arrow image
         self.arrow_image = pygame.transform.scale(self.arrow_image, (10, 30))  # Resize arrow
         self.last_arrow_time = 0  # Track the last time an arrow was spawned
+        self.diff = diff
         print("Game initialized")
 
     def check_collisions(self):
@@ -116,7 +119,7 @@ class Game:
 
         # Check if 5 pairs of gates have been spawned and the boss is not active
         if not self.boss_active and not self.boss_beaten and self.gate_pair_count >= MIN_GATE_FOR_BOSS:
-            self.boss = Boss()  # Create a new boss instance
+            self.boss = Boss(self.diff)  # Create a new boss instance
             self.boss_active = True
             print("Boss has appeared!")
 
@@ -174,6 +177,7 @@ class Game:
             # Check collision with the boss
             if self.boss and self.boss_active and arrow["rect"].colliderect(self.boss.get_rect()):
                 self.boss.health -= 1  # Subtract 1 health from the boss
+                self.arrow_impact.play()
                 print(f"Arrow hit the boss! Boss health: {self.boss.health}")
                 self.arrows.remove(arrow)  # Remove the arrow after collision
 
@@ -193,7 +197,8 @@ class Game:
             # Check collisions with fireballs
             for fireball in self.boss.fireballs[:]:
                 if self.player.get_rect().colliderect(fireball.rect):
-                    self.player.score -= FIREBALL_DAMAGE  # Deduct 1 point from the player's score
+                    self.player.score -= FIREBALL_DAMAGE * (self.diff + 1)  # Deduct 10, 20, 30 point from the player's score
+                    self.fireball_hit_sound.play()
                     print(f"Hit by fireball! New score: {self.player.score}")
                     self.boss.fireballs.remove(fireball)  # Remove fireball after collision
 
