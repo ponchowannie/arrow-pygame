@@ -29,6 +29,10 @@ class Game:
         self.boss_active = False  # Flag to indicate if the boss is active
         self.gate_pair_count = 0  # Counter for the number of gate pairs spawned
         self.boss_beaten = False  # Track if the boss has been beaten
+        self.arrows = []  # List to store arrows
+        self.arrow_image = pygame.image.load('./components/images/arrow.png')  # Load arrow image
+        self.arrow_image = pygame.transform.scale(self.arrow_image, (10, 30))  # Resize arrow
+        self.last_arrow_time = 0  # Track the last time an arrow was spawned
         print("Game initialized")
 
     def check_collisions(self):
@@ -71,6 +75,17 @@ class Game:
                     self.boss.health -= self.player.score  # Reduce boss health by player's score
                     self.player.score = 0  # Set player score to 0
                     self.boss_beaten = True  # Mark the boss as beaten
+
+    def spawn_arrow(self, direction='up'):
+        """Spawn an arrow moving in the specified direction."""
+        arrow = {
+            "x": self.player.x + self.player.width // 2 - 5,  # Center of the player
+            "y": self.player.y,
+            "speed": -10 if direction == 'up' else 10,  # Speed in the -y direction
+            "rect": self.arrow_image.get_rect(topleft=(self.player.x + self.player.width // 2 - 5, self.player.y))
+        }
+        self.arrows.append(arrow)
+        print("Arrow spawned!")
 
     def spawn_objects(self):
         current_time = pygame.time.get_ticks()
@@ -136,8 +151,22 @@ class Game:
             if road_line.y > WINDOW_HEIGHT:  # Remove if completely out of the screen
                 self.road_lines.remove(road_line)
 
+        # Update arrow positions and check for collisions with the boss
+        for arrow in self.arrows[:]:
+            arrow["y"] += arrow["speed"]
+            arrow["rect"].y = arrow["y"]  # Update arrow rect position
+
+            # Check collision with the boss
+            if self.boss and self.boss_active and arrow["rect"].colliderect(self.boss.get_rect()):
+                self.boss.health -= 1  # Subtract 1 health from the boss
+                print(f"Arrow hit the boss! Boss health: {self.boss.health}")
+                self.arrows.remove(arrow)  # Remove the arrow after collision
+
+            # Remove arrow if it goes out of the screen
+            if arrow["y"] < 0 or arrow["y"] > WINDOW_HEIGHT:
+                self.arrows.remove(arrow)
+
         if self.boss and self.boss_active:  # Update the boss if active
-            self.player.move("up") 
             self.boss.update_object()
             if self.boss.health <= 0:  # Check if the boss is defeated
                 print("Boss defeated!")
@@ -161,6 +190,10 @@ class Game:
             gate.draw(screen)
         for obstacle in reversed(self.obstacles):
             obstacle.draw(screen)
+
+        # Draw arrows
+        for arrow in self.arrows:
+            screen.blit(self.arrow_image, (arrow["x"], arrow["y"]))  # Draw arrow image
 
         # Draw the boss if active
         if self.boss and self.boss_active:  

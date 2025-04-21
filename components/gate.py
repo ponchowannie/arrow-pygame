@@ -36,12 +36,8 @@ class Gate(GameObject):
         gate_surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
 
         # Choose colors based on operation and collected status
-        if self.operation == "ADD":
-            fill_color = TRANSPARENT_GREY if self.collected else TRANSPARENT_BLUE
-            outline_color = NEON_GREY if self.collected else NEON_BLUE
-        else:  # MULTIPLY
-            fill_color = TRANSPARENT_GREY if self.collected else TRANSPARENT_GREEN
-            outline_color = NEON_GREY if self.collected else NEON_GREEN
+        fill_color = TRANSPARENT_GREY if self.collected else TRANSPARENT_BLUE
+        outline_color = NEON_GREY if self.collected else NEON_BLUE
 
         # Draw the transparent fill
         pygame.draw.rect(gate_surface, fill_color, (0, 0, self.width, self.height))
@@ -53,5 +49,7 @@ class Gate(GameObject):
         # Draw the transparent surface
         screen.blit(gate_surface, (self.x, self.y - self.height // 2))
 
-        # Draw the value text in white for better contrast against the neon
-        self.draw_text(screen, self.value, WHITE, (self.x + self.width // 2, self.y))
+        # Draw the value text along with the operation type
+        operation_symbol = "+" if self.operation == "ADD" else "x"
+        text = f"{operation_symbol} {self.value}"
+        self.draw_text(screen, text, WHITE, (self.x + self.width // 2, self.y))
