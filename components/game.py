@@ -77,15 +77,30 @@ class Game:
                     self.boss_beaten = True  # Mark the boss as beaten
 
     def spawn_arrow(self, direction='up'):
-        """Spawn an arrow moving in the specified direction."""
-        arrow = {
-            "x": self.player.x + self.player.width // 2 - 5,  # Center of the player
-            "y": self.player.y,
-            "speed": -10 if direction == 'up' else 10,  # Speed in the -y direction
-            "rect": self.arrow_image.get_rect(topleft=(self.player.x + self.player.width // 2 - 5, self.player.y))
-        }
-        self.arrows.append(arrow)
-        print("Arrow spawned!")
+        """Spawn multiple arrows based on the player's arrow count."""
+        if self.player.score - self.player.arrow_count < 1:
+            print("Not enough score to spawn arrows.")
+            return
+
+        arrow_spacing = 10  # Space between arrows
+        total_arrows = self.player.arrow_count
+        print(f"Spawning {total_arrows} arrows in direction: {direction}")
+        start_x = self.player.x - (arrow_spacing * (total_arrows - 1)) // 2  # Center arrows around the player
+
+        for i in range(total_arrows):
+            arrow_x = start_x + i * arrow_spacing
+            # Create and add an arrow at the calculated position
+            arrow = {
+                "x": arrow_x,
+                "y": self.player.y,
+                "speed": -10 if direction == 'up' else 10,  # Speed in the -y direction
+                "rect": self.arrow_image.get_rect(topleft=(arrow_x, self.player.y))
+            }
+            self.arrows.append(arrow)
+
+        # Subtract the player's score by the number of arrows spawned
+        self.player.score -= total_arrows
+        print(f"Player score after spawning arrows: {self.player.score}")
 
     def spawn_objects(self):
         current_time = pygame.time.get_ticks()
@@ -100,12 +115,12 @@ class Game:
             print(f"Spawned new gate pair. Total pairs spawned: {self.gate_pair_count}")
 
         # Check if 5 pairs of gates have been spawned and the boss is not active
-        if not self.boss_active and self.gate_pair_count >= 5:
+        if not self.boss_active and not self.boss_beaten and self.gate_pair_count >= 5:
             self.boss = Boss()  # Create a new boss instance
             self.boss_active = True
             print("Boss has appeared!")
 
-        if current_time - self.obs_timer > self.spawn_delay:
+        if current_time - self.obs_timer > OBSTACLE_SPAWN_DELAY:
             enemy_count = random.randint(0, 3)  # Random number of enemies
             positions = [0, 1, 2, 3]
             enemy_positions = random.sample(positions, enemy_count)
@@ -153,8 +168,8 @@ class Game:
 
         # Update arrow positions and check for collisions with the boss
         for arrow in self.arrows[:]:
-            arrow["y"] += arrow["speed"]
-            arrow["rect"].y = arrow["y"]  # Update arrow rect position
+            arrow["y"] += arrow["speed"]  # Move the arrow in the y-direction
+            arrow["rect"].y = arrow["y"]  # Update the arrow's rect position
 
             # Check collision with the boss
             if self.boss and self.boss_active and arrow["rect"].colliderect(self.boss.get_rect()):
@@ -170,6 +185,7 @@ class Game:
             self.boss.update_object()
             if self.boss.health <= 0:  # Check if the boss is defeated
                 print("Boss defeated!")
+                self.boss_beaten = True  # Mark the boss as beaten
                 self.boss_active = False
                 self.boss = None
 
@@ -196,9 +212,7 @@ class Game:
             screen.blit(self.arrow_image, (arrow["x"], arrow["y"]))  # Draw arrow image
 
         # Draw the boss if active
-        if self.boss and self.boss_active:  
-            self.boss.draw(screen)
-        elif not self.boss and not self.boss_active and self.boss_beaten:
+        if self.boss and self.boss_active and not self.boss_beaten:  
             self.boss.draw(screen)
 
         # Draw player

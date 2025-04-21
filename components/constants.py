@@ -24,7 +24,8 @@ ROAD_LINE_HEIGHT = 1
 ROAD_LINE_SPAWN_DELAY = 1000  # Milliseconds
 
 # Game settings
-SPAWN_DELAY = 3000  # milliseconds
+SPAWN_DELAY = 2000  # milliseconds
+OBSTACLE_SPAWN_DELAY = 3500  # milliseconds
 CACTUS_SPAWN_DELAY = 800  # milliseconds
 GAME_SPEED = 0.002  # Reduced speed for smoother movement
 MAX_ARROWS_PER_LAYER = 12
